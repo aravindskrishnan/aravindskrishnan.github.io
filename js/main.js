@@ -1,421 +1,209 @@
-$(document).ready(function() {
-    "use strict";
+/** 
+ * ===================================================================
+ * Main js
+ *
+ * ------------------------------------------------------------------- 
+ */ 
 
-    var window_width = $(window).width(),
-        window_height = window.innerHeight,
-        header_height = $(".default-header").height(),
-        header_height_static = $(".site-header.static").outerHeight(),
-        fitscreen = window_height - header_height;
+(function($) {
 
-    $(".fullscreen").css("height", window_height)
-    $(".fitscreen").css("height", fitscreen);
+	"use strict";
 
-    //------- Niceselect  js --------//  
+	/* --------------------------------------------------- */
+	/* Preloader
+	------------------------------------------------------ */ 
+   $(window).load(function() {
+      // will first fade out the loading animation 
+    	$("#loader").fadeOut("slow", function(){
 
-    if (document.getElementById("default-select")) {
-        $('select').niceSelect();
-    };
-    if (document.getElementById("default-select2")) {
-        $('select').niceSelect();
-    };
-    if (document.getElementById("service-select")) {
-        $('select').niceSelect();
-    };    
+        // will fade out the whole DIV that covers the website.
+        $("#preloader").delay(300).fadeOut("slow");
 
-    //------- Lightbox  js --------//  
-
-    $('.img-gal').magnificPopup({
-        type: 'image',
-        gallery: {
-            enabled: true
-        }
-    });
-
-    $('.play-btn').magnificPopup({
-        type: 'iframe',
-        mainClass: 'mfp-fade',
-        removalDelay: 160,
-        preloader: false,
-        fixedContentPos: false
-    });
-
-    //------- Datepicker  js --------//  
-
-      $( function() {
-        $( "#datepicker" ).datepicker();
-        $( "#datepicker2" ).datepicker();
-      } );
+      }); 
+  	})
 
 
-    //------- Superfist nav menu  js --------//  
-
-    $('.nav-menu').superfish({
-        animation: {
-            opacity: 'show'
-        },
-        speed: 400
-    });
-
-    /* ---------------------------------------------
-     accordion
-     --------------------------------------------- */
-
-    var allPanels = $(".accordion > dd").hide();
-    allPanels.first().slideDown("easeOutExpo");
-    $(".accordion").each(function() {
-        $(this).find("dt > a").first().addClass("active").parent().next().css({
-            display: "block"
-        });
-    });
+  	/*---------------------------------------------------- */
+	/* FitVids
+	------------------------------------------------------ */ 
+  	$(".fluid-video-wrapper").fitVids();
 
 
-     $(document).on('click', '.accordion > dt > a', function(e) {
-
-        var current = $(this).parent().next("dd");
-        $(this).parents(".accordion").find("dt > a").removeClass("active");
-        $(this).addClass("active");
-        $(this).parents(".accordion").find("dd").slideUp("easeInExpo");
-        $(this).parent().next().slideDown("easeOutExpo");
-
-        return false;
-
-    });
-
-    //------- Tabs Js --------//  
-    if (document.getElementById("horizontalTab")) {
-
-    $('#horizontalTab').jqTabs({
-        direction: 'horizontal',
-        duration: 200
-    });
-    
-    };  
+	/* --------------------------------------------------- */
+	/*  Vegas Slideshow
+	------------------------------------------------------ */
+	$(".home-slides").vegas({
+		transition: 'fade',
+		transitionDuration: 2500,
+		delay: 5000,
+    	slides: [
+       	{ src: "images/slides/03.jpg" },
+        	{ src: "images/slides/02.jpg" },
+        	{ src: "images/slides/01.jpg" }
+    	]
+	});
 
 
-    //------- Owl Carusel  js --------//  
+	/* --------------------------------------------------- */
+	/*  Particle JS
+	------------------------------------------------------ */
+	$('.home-particles').particleground({
+	   dotColor: '#fff',
+	   lineColor: '#555555',
+	   particleRadius: 6,
+	   curveLines: true,
+	   density: 10000,
+	   proximity: 110
+	}); 
 
 
-    $('.active-popular-carusel').owlCarousel({
-        items:4,
-        margin: 30,
-        loop:true,
-        dots: true,
-        autoplayHoverPause: true,
-        smartSpeed:650,         
-        autoplay:true,      
-            responsive: {
-            0: {
-                items: 1
-            },
-            480: {
-                items: 1,
-            },
-            768: {
-                items: 2,
-            },
-            992: {
-                items:4
-            }
-        }
-    });
+	/*-----------------------------------------------------*/
+	/* tabs
+  	-------------------------------------------------------*/	
+	$(".tab-content").hide();
+	$(".tab-content").first().show();
 
-    $('.active-upcoming-event-carusel').owlCarousel({
-        items:2,
-        margin: 30,
-        loop:true,
-        dots: true,
-        autoplayHoverPause: true,
-        smartSpeed:650,         
-        autoplay:true,      
-            responsive: {
-            0: {
-                items: 1
-            },
-            480: {
-                items: 1,
-            },
-            992: {
-                items: 2,
-            }
-        }
-    });
+	$("ul.tabs li").click(function () {
+	   $("ul.tabs li").removeClass("active");
+	   $(this).addClass("active");
+	   $(".tab-content").hide();
+	   var activeTab = $(this).attr("data-id");
+	   $("#" + activeTab).fadeIn(700);
+	});
 
 
-    $('.active-review-carusel').owlCarousel({
-        items:2,
-        margin: 30,
-        loop:true,
-        dots: true,
-        autoplayHoverPause: true,
-        smartSpeed:650,         
-        autoplay:true,      
-            responsive: {
-            0: {
-                items: 1
-            },
-            480: {
-                items: 1,
-            },
-            768: {
-                items: 2,
-            }
-        }
-    });
+	/*----------------------------------------------------*/
+  	/* Smooth Scrolling
+  	------------------------------------------------------*/
+  	$('.smoothscroll').on('click', function (e) {
+	 	
+	 	e.preventDefault();
 
-    //------- Mobile Nav  js --------//  
+   	var target = this.hash,
+    	$target = $(target);
 
-    if ($('#nav-menu-container').length) {
-        var $mobile_nav = $('#nav-menu-container').clone().prop({
-            id: 'mobile-nav'
-        });
-        $mobile_nav.find('> ul').attr({
-            'class': '',
-            'id': ''
-        });
-        $('body').append($mobile_nav);
-        $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="lnr lnr-menu"></i></button>');
-        $('body').append('<div id="mobile-body-overly"></div>');
-        $('#mobile-nav').find('.menu-has-children').prepend('<i class="lnr lnr-chevron-down"></i>');
+    	$('html, body').stop().animate({
+       	'scrollTop': $target.offset().top
+      }, 800, 'swing', function () {
+      	window.location.hash = target;
+      });
 
-        $(document).on('click', '.menu-has-children i', function(e) {
-            $(this).next().toggleClass('menu-item-active');
-            $(this).nextAll('ul').eq(0).slideToggle();
-            $(this).toggleClass("lnr-chevron-up lnr-chevron-down");
-        });
-
-        $(document).on('click', '#mobile-nav-toggle', function(e) {
-            $('body').toggleClass('mobile-nav-active');
-            $('#mobile-nav-toggle i').toggleClass('lnr-cross lnr-menu');
-            $('#mobile-body-overly').toggle();
-        });
-
-            $(document).on('click', function(e) {
-            var container = $("#mobile-nav, #mobile-nav-toggle");
-            if (!container.is(e.target) && container.has(e.target).length === 0) {
-                if ($('body').hasClass('mobile-nav-active')) {
-                    $('body').removeClass('mobile-nav-active');
-                    $('#mobile-nav-toggle i').toggleClass('lnr-cross lnr-menu');
-                    $('#mobile-body-overly').fadeOut();
-                }
-            }
-        });
-    } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
-        $("#mobile-nav, #mobile-nav-toggle").hide();
-    }
-
-    //------- Smooth Scroll  js --------//  
-
-    $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function() {
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            if (target.length) {
-                var top_space = 0;
-
-                if ($('#header').length) {
-                    top_space = $('#header').outerHeight();
-
-                    if (!$('#header').hasClass('header-fixed')) {
-                        top_space = top_space;
-                    }
-                }
-
-                $('html, body').animate({
-                    scrollTop: target.offset().top - top_space
-                }, 1500, 'easeInOutExpo');
-
-                if ($(this).parents('.nav-menu').length) {
-                    $('.nav-menu .menu-active').removeClass('menu-active');
-                    $(this).closest('li').addClass('menu-active');
-                }
-
-                if ($('body').hasClass('mobile-nav-active')) {
-                    $('body').removeClass('mobile-nav-active');
-                    $('#mobile-nav-toggle i').toggleClass('lnr-times lnr-bars');
-                    $('#mobile-body-overly').fadeOut();
-                }
-                return false;
-            }
-        }
-    });
-
-    $(document).ready(function() {
-
-        $('html, body').hide();
-
-        if (window.location.hash) {
-
-            setTimeout(function() {
-
-                $('html, body').scrollTop(0).show();
-
-                $('html, body').animate({
-
-                    scrollTop: $(window.location.hash).offset().top - 108
-
-                }, 1000)
-
-            }, 0);
-
-        } else {
-
-            $('html, body').show();
-
-        }
-
-    });
+  	});
 
 
+  	/* --------------------------------------------------- */
+	/*  Placeholder Plugin Settings
+	------------------------------------------------------ */
+	$('input, textarea, select').placeholder()  
 
-    //------- Header Scroll Class  js --------//  
 
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 100) {
-            $('#header').addClass('header-scrolled');
-        } else {
-            $('#header').removeClass('header-scrolled');
-        }
-    });
+  	/*---------------------------------------------------- */
+   /* ajaxchimp
+	------------------------------------------------------ */
 
-    //------- Google Map  js --------//  
+	// Example MailChimp url: http://xxx.xxx.list-manage.com/subscribe/post?u=xxx&id=xxx
+	var mailChimpURL = 'http://facebook.us8.list-manage.com/subscribe/post?u=cdb7b577e41181934ed6a6a44&amp;id=e65110b38d'
 
-    if (document.getElementById("map")) {
-        google.maps.event.addDomListener(window, 'load', init);
+	$('#mc-form').ajaxChimp({
 
-        function init() {
-            var mapOptions = {
-                zoom: 11,
-                center: new google.maps.LatLng(40.6700, -73.9400), // New York
-                styles: [{
-                    "featureType": "water",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#e9e9e9"
-                    }, {
-                        "lightness": 17
-                    }]
-                }, {
-                    "featureType": "landscape",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#f5f5f5"
-                    }, {
-                        "lightness": 20
-                    }]
-                }, {
-                    "featureType": "road.highway",
-                    "elementType": "geometry.fill",
-                    "stylers": [{
-                        "color": "#ffffff"
-                    }, {
-                        "lightness": 17
-                    }]
-                }, {
-                    "featureType": "road.highway",
-                    "elementType": "geometry.stroke",
-                    "stylers": [{
-                        "color": "#ffffff"
-                    }, {
-                        "lightness": 29
-                    }, {
-                        "weight": 0.2
-                    }]
-                }, {
-                    "featureType": "road.arterial",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#ffffff"
-                    }, {
-                        "lightness": 18
-                    }]
-                }, {
-                    "featureType": "road.local",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#ffffff"
-                    }, {
-                        "lightness": 16
-                    }]
-                }, {
-                    "featureType": "poi",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#f5f5f5"
-                    }, {
-                        "lightness": 21
-                    }]
-                }, {
-                    "featureType": "poi.park",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#dedede"
-                    }, {
-                        "lightness": 21
-                    }]
-                }, {
-                    "elementType": "labels.text.stroke",
-                    "stylers": [{
-                        "visibility": "on"
-                    }, {
-                        "color": "#ffffff"
-                    }, {
-                        "lightness": 16
-                    }]
-                }, {
-                    "elementType": "labels.text.fill",
-                    "stylers": [{
-                        "saturation": 36
-                    }, {
-                        "color": "#333333"
-                    }, {
-                        "lightness": 40
-                    }]
-                }, {
-                    "elementType": "labels.icon",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                }, {
-                    "featureType": "transit",
-                    "elementType": "geometry",
-                    "stylers": [{
-                        "color": "#f2f2f2"
-                    }, {
-                        "lightness": 19
-                    }]
-                }, {
-                    "featureType": "administrative",
-                    "elementType": "geometry.fill",
-                    "stylers": [{
-                        "color": "#fefefe"
-                    }, {
-                        "lightness": 20
-                    }]
-                }, {
-                    "featureType": "administrative",
-                    "elementType": "geometry.stroke",
-                    "stylers": [{
-                        "color": "#fefefe"
-                    }, {
-                        "lightness": 17
-                    }, {
-                        "weight": 1.2
-                    }]
-                }]
-            };
-            var mapElement = document.getElementById('map');
-            var map = new google.maps.Map(mapElement, mapOptions);
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(40.6700, -73.9400),
-                map: map,
-                title: 'Snazzy!'
-            });
-        }
-    }
+		language: 'es',
+	   url: mailChimpURL
 
-    //------- Mailchimp js --------//  
+	});
 
-    $(document).ready(function() {
-        $('#mc_embed_signup').find('form').ajaxChimp();
-    });
+	// Mailchimp translation
+	//
+	//  Defaults:
+	//	 'submit': 'Submitting...',
+	//  0: 'We have sent you a confirmation email',
+	//  1: 'Please enter a value',
+	//  2: 'An email address must contain a single @',
+	//  3: 'The domain portion of the email address is invalid (the portion after the @: )',
+	//  4: 'The username portion of the email address is invalid (the portion before the @: )',
+	//  5: 'This email address looks fake or invalid. Please enter a real email address'
 
-});
+	$.ajaxChimp.translations.es = {
+	  'submit': 'Submitting...',
+	  0: '<i class="fa fa-check"></i> We have sent you a confirmation email',
+	  1: '<i class="fa fa-warning"></i> You must enter a valid e-mail address.',
+	  2: '<i class="fa fa-warning"></i> E-mail address is not valid.',
+	  3: '<i class="fa fa-warning"></i> E-mail address is not valid.',
+	  4: '<i class="fa fa-warning"></i> E-mail address is not valid.',
+	  5: '<i class="fa fa-warning"></i> E-mail address is not valid.'
+	}
+
+
+	/*---------------------------------------------------- */
+	/*	contact form
+	------------------------------------------------------ */
+
+	/* local validation */
+	$('#contactForm').validate({
+
+		/* submit via ajax */
+		submitHandler: function(form) {
+
+			var sLoader = $('#submit-loader');
+
+			$.ajax({      	
+
+		      type: "POST",
+		      url: "inc/sendEmail.php",
+		      data: $(form).serialize(),
+		      beforeSend: function() { 
+
+		      	sLoader.fadeIn(); 
+
+		      },
+		      success: function(msg) {
+
+	            // Message was sent
+	            if (msg == 'OK') {
+	            	sLoader.fadeOut(); 
+	               $('#message-warning').hide();
+	               $('#contactForm').fadeOut();
+	               $('#message-success').fadeIn();   
+	            }
+	            // There was an error
+	            else {
+	            	sLoader.fadeOut(); 
+	               $('#message-warning').html(msg);
+		            $('#message-warning').fadeIn();
+	            }
+
+		      },
+		      error: function() {
+
+		      	sLoader.fadeOut(); 
+		      	$('#message-warning').html("Something went wrong. Please try again.");
+		         $('#message-warning').fadeIn();
+
+		      }
+
+	      });     		
+  		}
+
+	});
+
+
+	/*----------------------------------------------------*/
+	/* Final Countdown Settings
+	------------------------------------------------------ */
+	var finalDate = '2018/01/01';
+
+	$('div#counter').countdown(finalDate)
+   	.on('update.countdown', function(event) {
+
+   		$(this).html(event.strftime('<div class=\"half\">' +
+   											 '<span>%D <sup>days</sup></span>' + 
+   										 	 '<span>%H <sup>hours</sup></span>' + 
+   										 	 '</div>' +
+   										 	 '<div class=\"half\">' +
+   										 	 '<span>%M <sup>mins</sup></span>' +
+   										 	 '<span>%S <sup>secs</sup></span>' +
+   										 	 '</div>'));
+
+   });     
+ 
+
+})(jQuery);
